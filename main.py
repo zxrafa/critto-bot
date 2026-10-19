@@ -21,93 +21,136 @@ logging.basicConfig(
 )
 logger = logging.getLogger("CrittoRolesBot")
 
-# Definição Completa dos Cargos de Desenvolvimento do Estúdio
+# Definição Completa dos Cargos de Desenvolvimento do Critto Studios
 ROLES_CONFIG = [
     {
-        "name": "Script",
-        "label": "Script (Programador Luau)",
+        "name": "SC ៸៸ SCRIPTER",
+        "aliases": ["Script", "Scripter", "SC", "Programador"],
+        "label": "Script / Scripter",
         "description": "Programação Luau, backend, lógica, mecânicas e sistemas",
         "emoji": "💻",
-        "color": discord.Color.from_rgb(0, 229, 255)  # Cyan Neon
+        "color": discord.Color.from_rgb(255, 255, 255)
     },
     {
-        "name": "Builder",
-        "label": "Builder (Cenário & Mapas)",
+        "name": "BL ៸៸ BUILDER",
+        "aliases": ["Builder", "BL", "Construção"],
+        "label": "Builder (Mapas & Cenário)",
         "description": "Construção de mapas, level design e arquitetura no Studio",
         "emoji": "🔨",
-        "color": discord.Color.from_rgb(255, 184, 0)  # Âmbar Dourado
+        "color": discord.Color.from_rgb(228, 227, 231)
     },
     {
-        "name": "Modeler 3D",
-        "label": "Modeler 3D (Blender / Meshes)",
-        "description": "Modelagem de criaturas, itens, armas e props 3D",
+        "name": "3D ៸៸ 3D MODELER",
+        "aliases": ["3D Modeler", "Modeler 3D", "Modeler", "3D", "Modelador"],
+        "label": "3D Modeler (Blender)",
+        "description": "Modelagem de criaturas, itens, armas e meshes 3D",
         "emoji": "🗿",
-        "color": discord.Color.from_rgb(249, 115, 22)  # Laranja
+        "color": discord.Color.from_rgb(212, 211, 216)
     },
     {
-        "name": "Concept Artist",
-        "label": "Concept Artist (Arte Conceitual)",
+        "name": "CA ៸៸ CONCEPT ARTIST",
+        "aliases": ["Concept Artist", "Concept", "CA", "Arte Conceitual"],
+        "label": "Concept Artist (Design Visual)",
         "description": "Design visual, sketches de criaturas, armas e biomas",
         "emoji": "💡",
-        "color": discord.Color.from_rgb(234, 179, 8)  # Amarelo Ouro
+        "color": discord.Color.from_rgb(161, 161, 170)
     },
     {
-        "name": "UI/UX Designer",
-        "label": "UI/UX Designer (Interface)",
+        "name": "UI ៸៸ UI DESIGNER",
+        "aliases": ["UI Designer", "UI/UX Designer", "UI", "Interface"],
+        "label": "UI Designer (Interfaces)",
         "description": "HUDs, menus, telas, botões, ícones e layout visual",
         "emoji": "🎨",
-        "color": discord.Color.from_rgb(236, 72, 153)  # Rosa Neon
+        "color": discord.Color.from_rgb(161, 161, 170)
     },
     {
-        "name": "VFX Artist",
+        "name": "AN ៸៸ ANIMATOR",
+        "aliases": ["Animator", "Animador", "AN"],
+        "label": "Animator (Rigs & Movimentos)",
+        "description": "Animações de combate, idle, caminhada, rigs e emotes",
+        "emoji": "🦴",
+        "color": discord.Color.from_rgb(161, 161, 170)
+    },
+    {
+        "name": "VF ៸៸ VFX ARTIST",
+        "aliases": ["VFX Artist", "VFX", "VF", "Efeitos"],
         "label": "VFX Artist (Efeitos Visuais)",
         "description": "Partículas, magias, luzes, feixes e shaders",
         "emoji": "✨",
-        "color": discord.Color.from_rgb(168, 85, 247)  # Roxo Místico
+        "color": discord.Color.from_rgb(161, 161, 170)
     },
     {
-        "name": "Animador",
-        "label": "Animador (Rigs & Movimentos)",
-        "description": "Animações de combate, idle, caminhada, rigs e emotes",
-        "emoji": "🦴",
-        "color": discord.Color.from_rgb(34, 197, 94)  # Verde Esmeralda
-    },
-    {
-        "name": "SFX & Audio",
-        "label": "SFX & Audio (Sonoplasta)",
+        "name": "SD ៸៸ SOUND DESIGNER",
+        "aliases": ["Sound Designer", "SFX & Audio", "SD", "Audio", "Sonoplasta"],
+        "label": "Sound Designer (SFX & Áudio)",
         "description": "Efeitos sonoros, trilhas sonoras e atmosfera acústica",
         "emoji": "🎵",
-        "color": discord.Color.from_rgb(59, 130, 246)  # Azul Royal
+        "color": discord.Color.from_rgb(113, 113, 122)
     },
     {
-        "name": "GFX Artist",
-        "label": "GFX Artist (Thumbnails & Renders)",
-        "description": "Renders 3D para ícones de jogos, thumbnails e banners",
-        "emoji": "🖼️",
-        "color": discord.Color.from_rgb(20, 184, 166)  # Teal
-    },
-    {
-        "name": "Game Designer",
-        "label": "Game Designer (Sistemas & Lore)",
-        "description": "GDD, balanceamento de economia, mecânicas e lore",
-        "emoji": "📝",
-        "color": discord.Color.from_rgb(147, 51, 234)  # Violeta
-    },
-    {
-        "name": "Tester / QA",
-        "label": "Tester / QA (Playtest)",
+        "name": "QA ៸៸ QA TESTER",
+        "aliases": ["QA Tester", "Tester", "QA", "Playtester"],
+        "label": "QA Tester (Playtest)",
         "description": "Testes de estresse, reporte de bugs e balanceamento",
         "emoji": "🧪",
-        "color": discord.Color.from_rgb(239, 68, 68)  # Vermelho
+        "color": discord.Color.from_rgb(113, 113, 122)
+    },
+    {
+        "name": "CT ៸៸ CONTRACTOR",
+        "aliases": ["Contractor", "CT", "Freelancer"],
+        "label": "Contractor (Terceirizado)",
+        "description": "Desenvolvedor parceiro, freelancer ou contratado temporário",
+        "emoji": "🤝",
+        "color": discord.Color.from_rgb(82, 82, 91)
+    },
+    {
+        "name": "GS ៸៸ GUEST",
+        "aliases": ["Guest", "GS", "Convidado"],
+        "label": "Guest (Visitante)",
+        "description": "Convidado de honra ou membro especial do estúdio",
+        "emoji": "🌟",
+        "color": discord.Color.from_rgb(63, 63, 70)
+    },
+    {
+        "name": "PM ៸៸ PROJECT MANAGER",
+        "aliases": ["Project Manager", "PM", "Gerente de Projeto"],
+        "label": "Project Manager (Gestão)",
+        "description": "Gestão de equipe, cronograma e acompanhamento de tarefas",
+        "emoji": "📋",
+        "color": discord.Color.from_rgb(255, 255, 255)
     }
 ]
+
+def find_guild_role(guild: discord.Guild, role_cfg: dict) -> discord.Role | None:
+    """Busca o cargo no servidor pelo nome exato, aliases ou substring inteligente."""
+    # 1. Busca exata pelo nome cadastrado
+    role = discord.utils.get(guild.roles, name=role_cfg["name"])
+    if role:
+        return role
+
+    # 2. Busca exata pelos aliases
+    for alias in role_cfg.get("aliases", []):
+        role = discord.utils.get(guild.roles, name=alias)
+        if role:
+            return role
+
+    # 3. Busca por correspondência parcial (ex: se o servidor tem 'SC ៸៸ SCRIPTER' e o alias for 'Scripter')
+    for r in guild.roles:
+        r_name_clean = r.name.lower()
+        if role_cfg["name"].lower() in r_name_clean:
+            return r
+        for alias in role_cfg.get("aliases", []):
+            if alias.lower() in r_name_clean:
+                return r
+
+    return None
 
 class StudioRoleSelect(discord.ui.Select):
     def __init__(self):
         options = [
             discord.SelectOption(
-                label=cfg["label"],
-                value=cfg["name"],
+                label=cfg["label"][:100],
+                value=cfg["name"][:100],
                 description=cfg["description"][:100],
                 emoji=cfg["emoji"]
             )
@@ -133,7 +176,6 @@ class StudioRoleSelect(discord.ui.Select):
             await interaction.response.send_message("Cargo não encontrado na configuração.", ephemeral=True)
             return
 
-        # Verifica se o bot tem permissão de gerenciar cargos
         guild = interaction.guild
         bot_member = guild.me
         if not bot_member.guild_permissions.manage_roles:
@@ -145,16 +187,16 @@ class StudioRoleSelect(discord.ui.Select):
 
         await interaction.response.defer(ephemeral=True)
 
-        # Procura o cargo no servidor ou cria se não existir
-        target_role = discord.utils.get(guild.roles, name=chosen_role_name)
+        # Procura o cargo no servidor com busca inteligente
+        target_role = find_guild_role(guild, role_cfg)
         if not target_role:
             try:
                 target_role = await guild.create_role(
-                    name=chosen_role_name,
+                    name=role_cfg["name"],
                     color=role_cfg["color"],
                     reason="Criação automática pelo Painel de Cargos Critto Studios"
                 )
-                logger.info(f"Cargo '{chosen_role_name}' criado automaticamente no servidor {guild.name}.")
+                logger.info(f"Cargo '{role_cfg['name']}' criado automaticamente no servidor {guild.name}.")
             except discord.Forbidden:
                 await interaction.followup.send(
                     "❌ Falha ao criar o cargo automaticamente. Meu cargo deve ter permissões administrativas ou de gerenciar cargos.",
@@ -170,14 +212,14 @@ class StudioRoleSelect(discord.ui.Select):
             )
             return
 
-        # Toggle de Cargo (Adiciona ou Remove)
+        # Toggle de Cargo (Adiciona se não tiver, Remove se já tiver)
         member = interaction.user
         if target_role in member.roles:
             try:
                 await member.remove_roles(target_role, reason="Remoção via Painel de Cargos")
                 embed = discord.Embed(
                     title="Cargo Removido",
-                    description=f"{role_cfg['emoji']} Você não tem mais o cargo **{target_role.name}**.",
+                    description=f"{role_cfg['emoji']} Você não possui mais a função **@{target_role.name}**.",
                     color=discord.Color.from_rgb(239, 68, 68)
                 )
                 await interaction.followup.send(embed=embed, ephemeral=True)
@@ -188,8 +230,8 @@ class StudioRoleSelect(discord.ui.Select):
                 await member.add_roles(target_role, reason="Atribuição via Painel de Cargos")
                 embed = discord.Embed(
                     title="Cargo Atribuído com Sucesso!",
-                    description=f"{role_cfg['emoji']} Parabéns! Você agora possui a função de **{target_role.name}** na equipe.\n\n> *Descrição:* {role_cfg['description']}",
-                    color=role_cfg["color"]
+                    description=f"{role_cfg['emoji']} Você recebeu a função **@{target_role.name}** na equipe!\n\n> *Especialidade:* {role_cfg['description']}",
+                    color=discord.Color.from_rgb(0, 229, 255)
                 )
                 await interaction.followup.send(embed=embed, ephemeral=True)
             except Exception as e:
@@ -205,7 +247,7 @@ def create_panel_embed():
         title="🛠️ CRITTO STUDIOS // SELEÇÃO DE FUNÇÃO & CARGOS",
         description=(
             "Bem-vindo à equipe de desenvolvimento!\n"
-            "Escolha no menu abaixo a especialidade em que você atua ou irá produzir no projeto.\n\n"
+            "Escolha no menu abaixo a sua especialidade de atuação no projeto.\n\n"
             "💡 *Dica: Se você já tiver o cargo e selecioná-lo novamente, ele será removido (toggle).*"
         ),
         color=discord.Color.from_rgb(0, 229, 255)
@@ -213,7 +255,7 @@ def create_panel_embed():
 
     for cfg in ROLES_CONFIG:
         embed.add_field(
-            name=f"{cfg['emoji']} {cfg['name']}",
+            name=f"{cfg['emoji']} {cfg['label']}",
             value=f"└ {cfg['description']}",
             inline=False
         )
