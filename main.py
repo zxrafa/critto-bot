@@ -21,7 +21,14 @@ logging.basicConfig(
 )
 logger = logging.getLogger("CrittoRolesBot")
 
-# Definição Completa dos Cargos de Desenvolvimento do Critto Studios
+# Configuração do Cargo Automático de Entrada (Guest)
+GUEST_ROLE_CFG = {
+    "name": "GS ៸៸ GUEST",
+    "aliases": ["Guest", "GS", "Visitante", "Membro"],
+    "color": discord.Color.from_rgb(63, 63, 70)
+}
+
+# Definição dos Cargos de Desenvolvimento para o Menu Interativo
 ROLES_CONFIG = [
     {
         "name": "SC ៸៸ SCRIPTER",
@@ -97,44 +104,25 @@ ROLES_CONFIG = [
     },
     {
         "name": "CT ៸៸ CONTRACTOR",
-        "aliases": ["Contractor", "CT", "Freelancer"],
-        "label": "Contractor (Terceirizado)",
-        "description": "Desenvolvedor parceiro, freelancer ou contratado temporário",
-        "emoji": "🤝",
+        "aliases": ["Contractor", "CT", "Contratante", "Recrutador"],
+        "label": "Contractor (Contratante / Recrutador)",
+        "description": "Contratação, recrutamento e busca de desenvolvedores para o estúdio",
+        "emoji": "💼",
         "color": discord.Color.from_rgb(82, 82, 91)
-    },
-    {
-        "name": "GS ៸៸ GUEST",
-        "aliases": ["Guest", "GS", "Convidado"],
-        "label": "Guest (Visitante)",
-        "description": "Convidado de honra ou membro especial do estúdio",
-        "emoji": "🌟",
-        "color": discord.Color.from_rgb(63, 63, 70)
-    },
-    {
-        "name": "PM ៸៸ PROJECT MANAGER",
-        "aliases": ["Project Manager", "PM", "Gerente de Projeto"],
-        "label": "Project Manager (Gestão)",
-        "description": "Gestão de equipe, cronograma e acompanhamento de tarefas",
-        "emoji": "📋",
-        "color": discord.Color.from_rgb(255, 255, 255)
     }
 ]
 
 def find_guild_role(guild: discord.Guild, role_cfg: dict) -> discord.Role | None:
     """Busca o cargo no servidor pelo nome exato, aliases ou substring inteligente."""
-    # 1. Busca exata pelo nome cadastrado
     role = discord.utils.get(guild.roles, name=role_cfg["name"])
     if role:
         return role
 
-    # 2. Busca exata pelos aliases
     for alias in role_cfg.get("aliases", []):
         role = discord.utils.get(guild.roles, name=alias)
         if role:
             return role
 
-    # 3. Busca por correspondência parcial (ex: se o servidor tem 'SC ៸៸ SCRIPTER' e o alias for 'Scripter')
     for r in guild.roles:
         r_name_clean = r.name.lower()
         if role_cfg["name"].lower() in r_name_clean:
@@ -157,7 +145,7 @@ class StudioRoleSelect(discord.ui.Select):
             for cfg in ROLES_CONFIG
         ]
         super().__init__(
-            placeholder="Selecione sua função / cargo no estúdio...",
+            placeholder="Selecione sua função / especialidade no estúdio...",
             min_values=1,
             max_values=1,
             options=options,
@@ -187,7 +175,6 @@ class StudioRoleSelect(discord.ui.Select):
 
         await interaction.response.defer(ephemeral=True)
 
-        # Procura o cargo no servidor com busca inteligente
         target_role = find_guild_role(guild, role_cfg)
         if not target_role:
             try:
@@ -199,12 +186,11 @@ class StudioRoleSelect(discord.ui.Select):
                 logger.info(f"Cargo '{role_cfg['name']}' criado automaticamente no servidor {guild.name}.")
             except discord.Forbidden:
                 await interaction.followup.send(
-                    "❌ Falha ao criar o cargo automaticamente. Meu cargo deve ter permissões administrativas ou de gerenciar cargos.",
+                    "❌ Falha ao criar o cargo automaticamente. Meu cargo deve ter permissões de gerenciar cargos.",
                     ephemeral=True
                 )
                 return
 
-        # Verifica hierarquia de cargos
         if target_role >= bot_member.top_role:
             await interaction.followup.send(
                 f"⚠️ O cargo **@{target_role.name}** está acima ou no mesmo nível que o meu cargo mais alto. Mova o meu cargo para o topo na lista de cargos do servidor!",
@@ -212,7 +198,6 @@ class StudioRoleSelect(discord.ui.Select):
             )
             return
 
-        # Toggle de Cargo (Adiciona se não tiver, Remove se já tiver)
         member = interaction.user
         if target_role in member.roles:
             try:
@@ -263,25 +248,58 @@ def create_panel_embed():
     embed.set_footer(text="Critto Studios • Sistema Autônomo de Cargos • Discloud Free")
     return embed
 
+# Intents necessários para atribuição de roles e evento on_member_join
 intents = discord.Intents.default()
-# intents.members e intents.message_content podem ser ativados no portal do Discord caso deseje usar prefixo !, mas não são necessários para Slash Commands (/cargos)
+intents.members = True
 
 bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 
 @bot.event
 async def on_ready():
     logger.info(f"Bot conectado como {bot.user} (ID: {bot.user.id})")
-    bot.add_view(StudioRolesView()) # Registra a view persistente após reinícios
+    bot.add_view(StudioRolesView())
     try:
         synced = await bot.tree.sync()
         logger.info(f"Comandos Slash sincronizados: {len(synced)}")
     except Exception as e:
         logger.error(f"Erro ao sincronizar comandos slash: {e}")
 
+@bot.event
+async def on_member_join(member: discord.Member):
+    """Atribui automaticamente o cargo Guest a qualquer novo membro que entrar no servidor."""
+    guild = member.guild
+    bot_member = guild.me
+    if not bot_member.guild_permissions.manage_roles:
+        logger.warning(f"Sem permissão de gerenciar cargos para dar Guest em {guild.name}.")
+        return
+
+    guest_role = find_guild_role(guild, GUEST_ROLE_CFG)
+    if not guest_role:
+        try:
+            guest_role = await guild.create_role(
+                name=GUEST_ROLE_CFG["name"],
+                color=GUEST_ROLE_CFG["color"],
+                reason="Criação automática do cargo de entrada Guest"
+            )
+            logger.info(f"Cargo '{GUEST_ROLE_CFG['name']}' criado automaticamente em {guild.name}.")
+        except Exception as e:
+            logger.error(f"Erro ao criar cargo Guest: {e}")
+            return
+
+    if guest_role >= bot_member.top_role:
+        logger.warning(f"Cargo Guest (@{guest_role.name}) está acima do bot em {guild.name}.")
+        return
+
+    try:
+        await member.add_roles(guest_role, reason="Auto-cargo de boas-vindas (Guest)")
+        logger.info(f"Cargo Guest atribuído com sucesso para {member} no servidor {guild.name}.")
+    except Exception as e:
+        logger.error(f"Erro ao atribuir cargo Guest para {member}: {e}")
+
 @bot.command(name="cargos", aliases=["painel", "roles"])
 @commands.has_permissions(manage_roles=True)
 async def send_roles_panel(ctx: commands.Context):
-    """Envia o painel de seleção de cargos no canal atual (Requer permissão de Gerenciar Cargos)."""
+    """Envia o painel de seleção de cargos no canal atual."""
     embed = create_panel_embed()
     view = StudioRolesView()
     await ctx.send(embed=embed, view=view)
@@ -306,4 +324,15 @@ async def on_command_error(ctx: commands.Context, error):
         logger.error(f"Erro no comando: {error}")
 
 if __name__ == "__main__":
-    bot.run(TOKEN)
+    try:
+        bot.run(TOKEN)
+    except discord.errors.PrivilegedIntentsRequired:
+        print("\n" + "="*70)
+        print("⚠️ [ATENÇÃO] PRIVILEGED INTENTS REQUIRED!")
+        print("Para o cargo automático de Guest funcionar ao entrar:")
+        print("1. Acesse: https://discord.com/developers/applications")
+        print("2. Selecione seu Bot -> Aba 'Bot'")
+        print("3. Em 'Privileged Gateway Intents', marque: 'SERVER MEMBERS INTENT'")
+        print("4. Clique em 'Save Changes' e inicie o bot!")
+        print("="*70 + "\n")
+        sys.exit(1)
