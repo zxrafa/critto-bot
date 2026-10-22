@@ -1,6 +1,7 @@
 import os
 import sys
 import logging
+import datetime
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -21,17 +22,27 @@ logging.basicConfig(
 )
 logger = logging.getLogger("CrittoRolesBot")
 
-# Configuração do Cargo Automático de Entrada (Pioneiro)
-GUEST_ROLE_CFG = {
-    "name": "✨・Pioneiro",
-    "aliases": ["Pioneiro", "✨・Pioneiro", "Membro", "Guest"],
-    "color": discord.Color.from_rgb(241, 196, 15)
+# Configuração do Cargo Automático de Entrada (Membro - Servidor Aberto a Todos)
+MEMBER_ROLE_CFG = {
+    "name": "👤・Membro",
+    "aliases": ["Membro", "Member", "👤・Membro"],
+    "color": discord.Color.from_rgb(113, 113, 122)
 }
 
-# ID do canal de boas-vindas padrão (Fábrica de Criaturas)
-WELCOME_CHANNEL_ID = 1561693233988370493
+# IDs dos canais oficiais da Fábrica de Criaturas
+CHANNELS = {
+    "welcome": 1561693233988370493,      # 👋・boas-vindas
+    "rules": 1556292191750586461,        # 📜・regras
+    "announcements": 1560610569625534576,# 📢・avisos
+    "faq": 1560622890984939611,          # ❓・faq-lancamento
+    "notifications": 1560619508920746097,# 🔔・notificacoes
+    "spoilers": 1560620877945643040,     # 👀・spoilers
+    "suggestions": 1560620708676108318,  # 💡・sugestoes
+    "chat": 1560620520293138533,         # 💬・chat-geral
+    "media": 1560620550663970958         # 📸・midia
+}
 
-# Definição dos Cargos de Comunidade/Jogador para o Menu Interativo
+# Definição dos Cargos de Notificação para o Menu Interativo
 ROLES_CONFIG = [
     {
         "name": "🔔・Avisos de Lançamento",
@@ -211,6 +222,68 @@ def create_panel_embed():
     embed.set_footer(text="Fábrica de Criaturas • Roblox Experience • Sistema de Notificações")
     return embed
 
+def create_welcome_embed(member: discord.Member, member_count: int, guild_icon_url: str | None = None) -> discord.Embed:
+    """Gera o embed estilizado de boas-vindas com múltiplos fields e design moderno."""
+    embed = discord.Embed(
+        title="🎉 Seja bem-vindo(a) à Fábrica de Criaturas!",
+        description=(
+            f"Olá {member.mention}, prepare-se para explorar biomas insulares, colher elementos puros e chocar criaturas lendárias no Roblox!\n\n"
+            f"Você recebeu automaticamente o cargo **`👤・Membro`**."
+        ),
+        color=discord.Color.from_rgb(46, 204, 113),
+        timestamp=datetime.datetime.now(datetime.timezone.utc)
+    )
+
+    embed.set_author(
+        name=f"{member.display_name} entrou na ilha!",
+        icon_url=member.display_avatar.url
+    )
+    embed.set_thumbnail(url=member.display_avatar.url)
+
+    embed.add_field(
+        name="🧭 Primeiros Passos",
+        value=(
+            f"> • Fique por dentro em <#{CHANNELS['announcements']}>\n"
+            f"> • Leia as diretrizes em <#{CHANNELS['rules']}>\n"
+            f"> • Tire suas dúvidas em <#{CHANNELS['faq']}>"
+        ),
+        inline=False
+    )
+
+    embed.add_field(
+        name="🔥 Pré-Lançamento",
+        value=(
+            f"> • Veja novidades em <#{CHANNELS['spoilers']}>\n"
+            f"> • Escolha seus alertas em <#{CHANNELS['notifications']}>\n"
+            f"> • Envie sugestões em <#{CHANNELS['suggestions']}>"
+        ),
+        inline=True
+    )
+
+    embed.add_field(
+        name="💬 Comunidade",
+        value=(
+            f"> • Converse em <#{CHANNELS['chat']}>\n"
+            f"> • Mande prints e memes em <#{CHANNELS['media']}>\n"
+            f"> • Entre em call na categoria de voz!"
+        ),
+        inline=True
+    )
+
+    embed.add_field(
+        name="👥 Membro Oficial",
+        value=f"Você é o treinador **#{member_count}** a desembarcar na ilha!",
+        inline=False
+    )
+
+    footer_text = "Fábrica de Criaturas • Experiência Roblox Oficial"
+    if guild_icon_url:
+        embed.set_footer(text=footer_text, icon_url=guild_icon_url)
+    else:
+        embed.set_footer(text=footer_text)
+
+    return embed
+
 intents = discord.Intents.default()
 intents.members = True
 
@@ -228,49 +301,42 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member: discord.Member):
-    """Atribui automaticamente o cargo Pioneiro e envia saudação."""
+    """Atribui automaticamente o cargo Membro e envia embed individual de boas-vindas."""
     guild = member.guild
     bot_member = guild.me
-    if not bot_member.guild_permissions.manage_roles:
-        logger.warning(f"Sem permissão de gerenciar cargos para dar Pioneiro em {guild.name}.")
-        return
 
-    pioneiro_role = find_guild_role(guild, GUEST_ROLE_CFG)
-    if not pioneiro_role:
-        try:
-            pioneiro_role = await guild.create_role(
-                name=GUEST_ROLE_CFG["name"],
-                color=GUEST_ROLE_CFG["color"],
-                reason="Criação automática do cargo Pioneiro"
-            )
-            logger.info(f"Cargo '{GUEST_ROLE_CFG['name']}' criado automaticamente em {guild.name}.")
-        except Exception as e:
-            logger.error(f"Erro ao criar cargo Pioneiro: {e}")
-            return
+    # 1. Atribuir cargo Membro automaticamente (Servidor liberado para todos)
+    if bot_member.guild_permissions.manage_roles:
+        member_role = find_guild_role(guild, MEMBER_ROLE_CFG)
+        if not member_role:
+            try:
+                member_role = await guild.create_role(
+                    name=MEMBER_ROLE_CFG["name"],
+                    color=MEMBER_ROLE_CFG["color"],
+                    reason="Criação automática do cargo Membro"
+                )
+            except Exception as e:
+                logger.error(f"Erro ao criar cargo Membro: {e}")
 
-    if pioneiro_role < bot_member.top_role:
-        try:
-            await member.add_roles(pioneiro_role, reason="Auto-cargo de boas-vindas (Pioneiro)")
-            logger.info(f"Cargo Pioneiro atribuído com sucesso para {member} em {guild.name}.")
-        except Exception as e:
-            logger.error(f"Erro ao atribuir cargo Pioneiro para {member}: {e}")
+        if member_role and member_role < bot_member.top_role:
+            try:
+                await member.add_roles(member_role, reason="Auto-cargo de entrada (Membro)")
+                logger.info(f"Cargo Membro atribuído para {member}.")
+            except Exception as e:
+                logger.error(f"Erro ao atribuir cargo Membro para {member}: {e}")
 
-    # Enviar mensagem pública de boas-vindas se o canal existir
-    welcome_ch = guild.get_channel(WELCOME_CHANNEL_ID)
+    # 2. Enviar mensagem de boas-vindas individual com fields
+    welcome_ch = guild.get_channel(CHANNELS["welcome"])
     if not welcome_ch:
         welcome_ch = discord.utils.get(guild.text_channels, name="👋・boas-vindas") or discord.utils.get(guild.text_channels, name="boas-vindas")
-    
+
     if welcome_ch and welcome_ch.permissions_for(bot_member).send_messages:
-        welcome_embed = discord.Embed(
-            title="👋 Um novo Pioneiro entrou na Fábrica!",
-            description=f"Seja muito bem-vindo(a), {member.mention}! Você recebeu a tag exclusiva **@{pioneiro_role.name}**.\n\nFique atento aos anúncios e pegue suas notificações!",
-            color=discord.Color.from_rgb(241, 196, 15)
-        )
-        welcome_embed.set_thumbnail(url=member.display_avatar.url)
+        icon_url = guild.icon.url if guild.icon else None
+        embed = create_welcome_embed(member, guild.member_count, icon_url)
         try:
-            await welcome_ch.send(embed=welcome_embed)
+            await welcome_ch.send(content=f"👋 {member.mention}", embed=embed)
         except Exception as e:
-            logger.error(f"Erro ao enviar boas-vindas no canal: {e}")
+            logger.error(f"Erro ao enviar embed de boas-vindas: {e}")
 
 @bot.command(name="cargos", aliases=["painel", "roles", "notificacoes"])
 @commands.has_permissions(manage_roles=True)
@@ -291,6 +357,14 @@ async def slash_send_roles_panel(interaction: discord.Interaction):
     embed = create_panel_embed()
     view = PlayerRolesView()
     await interaction.response.send_message(embed=embed, view=view)
+
+@bot.command(name="testar-boas-vindas")
+@commands.has_permissions(manage_guild=True)
+async def test_welcome_cmd(ctx: commands.Context):
+    """Testa o envio da mensagem de boas-vindas com o usuário atual."""
+    icon_url = ctx.guild.icon.url if ctx.guild.icon else None
+    embed = create_welcome_embed(ctx.author, ctx.guild.member_count, icon_url)
+    await ctx.send(content=f"👋 {ctx.author.mention}", embed=embed)
 
 @send_roles_panel.error
 async def on_command_error(ctx: commands.Context, error):
