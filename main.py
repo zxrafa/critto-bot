@@ -21,94 +21,57 @@ logging.basicConfig(
 )
 logger = logging.getLogger("CrittoRolesBot")
 
-# Configuração do Cargo Automático de Entrada (Guest)
+# Configuração do Cargo Automático de Entrada (Pioneiro)
 GUEST_ROLE_CFG = {
-    "name": "GS ៸៸ GUEST",
-    "aliases": ["Guest", "GS", "Visitante", "Membro"],
-    "color": discord.Color.from_rgb(63, 63, 70)
+    "name": "✨・Pioneiro",
+    "aliases": ["Pioneiro", "✨・Pioneiro", "Membro", "Guest"],
+    "color": discord.Color.from_rgb(241, 196, 15)
 }
 
-# Definição dos Cargos de Desenvolvimento para o Menu Interativo
+# ID do canal de boas-vindas padrão (Fábrica de Criaturas)
+WELCOME_CHANNEL_ID = 1561693233988370493
+
+# Definição dos Cargos de Comunidade/Jogador para o Menu Interativo
 ROLES_CONFIG = [
     {
-        "name": "SC ៸៸ SCRIPTER",
-        "aliases": ["Script", "Scripter", "SC", "Programador"],
-        "label": "Script / Scripter",
-        "description": "Programação Luau, backend, lógica, mecânicas e sistemas",
+        "name": "🔔・Avisos de Lançamento",
+        "aliases": ["Avisos de Lançamento", "Lancamento", "Avisos"],
+        "label": "Avisos de Lançamento",
+        "description": "Receba ping no minuto exato em que o jogo abrir no Roblox",
+        "emoji": "🔔",
+        "color": discord.Color.from_rgb(46, 204, 113)
+    },
+    {
+        "name": "👀・Spoilers & Teasers",
+        "aliases": ["Spoilers & Teasers", "Spoilers", "Teasers"],
+        "label": "Spoilers & Teasers",
+        "description": "Notificações em primeira mão de novas criaturas, fotos e vídeos",
+        "emoji": "👀",
+        "color": discord.Color.from_rgb(52, 152, 219)
+    },
+    {
+        "name": "🎁・Códigos & Eventos",
+        "aliases": ["Códigos & Eventos", "Codigos", "Eventos"],
+        "label": "Códigos & Eventos",
+        "description": "Avisos de novos códigos promocionais de lançamento e eventos",
+        "emoji": "🎁",
+        "color": discord.Color.from_rgb(233, 30, 99)
+    },
+    {
+        "name": "📱・Mobile",
+        "aliases": ["Mobile", "Celular"],
+        "label": "Jogador Mobile / Celular",
+        "description": "Dispositivo principal: Celular / Tablet",
+        "emoji": "📱",
+        "color": discord.Color.from_rgb(149, 165, 166)
+    },
+    {
+        "name": "💻・PC",
+        "aliases": ["PC", "Computador"],
+        "label": "Jogador PC",
+        "description": "Dispositivo principal: Computador / Teclado e Mouse",
         "emoji": "💻",
-        "color": discord.Color.from_rgb(255, 255, 255)
-    },
-    {
-        "name": "BL ៸៸ BUILDER",
-        "aliases": ["Builder", "BL", "Construção"],
-        "label": "Builder (Mapas & Cenário)",
-        "description": "Construção de mapas, level design e arquitetura no Studio",
-        "emoji": "🔨",
-        "color": discord.Color.from_rgb(228, 227, 231)
-    },
-    {
-        "name": "3D ៸៸ 3D MODELER",
-        "aliases": ["3D Modeler", "Modeler 3D", "Modeler", "3D", "Modelador"],
-        "label": "3D Modeler (Blender)",
-        "description": "Modelagem de criaturas, itens, armas e meshes 3D",
-        "emoji": "🗿",
-        "color": discord.Color.from_rgb(212, 211, 216)
-    },
-    {
-        "name": "CA ៸៸ CONCEPT ARTIST",
-        "aliases": ["Concept Artist", "Concept", "CA", "Arte Conceitual"],
-        "label": "Concept Artist (Design Visual)",
-        "description": "Design visual, sketches de criaturas, armas e biomas",
-        "emoji": "💡",
-        "color": discord.Color.from_rgb(161, 161, 170)
-    },
-    {
-        "name": "UI ៸៸ UI DESIGNER",
-        "aliases": ["UI Designer", "UI/UX Designer", "UI", "Interface"],
-        "label": "UI Designer (Interfaces)",
-        "description": "HUDs, menus, telas, botões, ícones e layout visual",
-        "emoji": "🎨",
-        "color": discord.Color.from_rgb(161, 161, 170)
-    },
-    {
-        "name": "AN ៸៸ ANIMATOR",
-        "aliases": ["Animator", "Animador", "AN"],
-        "label": "Animator (Rigs & Movimentos)",
-        "description": "Animações de combate, idle, caminhada, rigs e emotes",
-        "emoji": "🦴",
-        "color": discord.Color.from_rgb(161, 161, 170)
-    },
-    {
-        "name": "VF ៸៸ VFX ARTIST",
-        "aliases": ["VFX Artist", "VFX", "VF", "Efeitos"],
-        "label": "VFX Artist (Efeitos Visuais)",
-        "description": "Partículas, magias, luzes, feixes e shaders",
-        "emoji": "✨",
-        "color": discord.Color.from_rgb(161, 161, 170)
-    },
-    {
-        "name": "SD ៸៸ SOUND DESIGNER",
-        "aliases": ["Sound Designer", "SFX & Audio", "SD", "Audio", "Sonoplasta"],
-        "label": "Sound Designer (SFX & Áudio)",
-        "description": "Efeitos sonoros, trilhas sonoras e atmosfera acústica",
-        "emoji": "🎵",
-        "color": discord.Color.from_rgb(113, 113, 122)
-    },
-    {
-        "name": "QA ៸៸ QA TESTER",
-        "aliases": ["QA Tester", "Tester", "QA", "Playtester"],
-        "label": "QA Tester (Playtest)",
-        "description": "Testes de estresse, reporte de bugs e balanceamento",
-        "emoji": "🧪",
-        "color": discord.Color.from_rgb(113, 113, 122)
-    },
-    {
-        "name": "CT ៸៸ CONTRACTOR",
-        "aliases": ["Contractor", "CT", "Contratante", "Recrutador"],
-        "label": "Contractor (Contratante / Recrutador)",
-        "description": "Contratação, recrutamento e busca de desenvolvedores para o estúdio",
-        "emoji": "💼",
-        "color": discord.Color.from_rgb(82, 82, 91)
+        "color": discord.Color.from_rgb(149, 165, 166)
     }
 ]
 
@@ -133,7 +96,7 @@ def find_guild_role(guild: discord.Guild, role_cfg: dict) -> discord.Role | None
 
     return None
 
-class StudioRoleSelect(discord.ui.Select):
+class PlayerRoleSelect(discord.ui.Select):
     def __init__(self):
         options = [
             discord.SelectOption(
@@ -145,11 +108,11 @@ class StudioRoleSelect(discord.ui.Select):
             for cfg in ROLES_CONFIG
         ]
         super().__init__(
-            placeholder="Selecione sua função / especialidade no estúdio...",
+            placeholder="Escolha suas notificações e plataforma...",
             min_values=1,
             max_values=1,
             options=options,
-            custom_id="critto_studio_role_select_menu"
+            custom_id="critto_player_role_select_menu"
         )
 
     async def callback(self, interaction: discord.Interaction):
@@ -181,7 +144,7 @@ class StudioRoleSelect(discord.ui.Select):
                 target_role = await guild.create_role(
                     name=role_cfg["name"],
                     color=role_cfg["color"],
-                    reason="Criação automática pelo Painel de Cargos Critto Studios"
+                    reason="Criação automática pelo Painel de Cargos Fábrica de Criaturas"
                 )
                 logger.info(f"Cargo '{role_cfg['name']}' criado automaticamente no servidor {guild.name}.")
             except discord.Forbidden:
@@ -204,7 +167,7 @@ class StudioRoleSelect(discord.ui.Select):
                 await member.remove_roles(target_role, reason="Remoção via Painel de Cargos")
                 embed = discord.Embed(
                     title="Cargo Removido",
-                    description=f"{role_cfg['emoji']} Você não possui mais a função **@{target_role.name}**.",
+                    description=f"{role_cfg['emoji']} Você não receberá mais a notificação de **@{target_role.name}**.",
                     color=discord.Color.from_rgb(239, 68, 68)
                 )
                 await interaction.followup.send(embed=embed, ephemeral=True)
@@ -215,27 +178,27 @@ class StudioRoleSelect(discord.ui.Select):
                 await member.add_roles(target_role, reason="Atribuição via Painel de Cargos")
                 embed = discord.Embed(
                     title="Cargo Atribuído com Sucesso!",
-                    description=f"{role_cfg['emoji']} Você recebeu a função **@{target_role.name}** na equipe!\n\n> *Especialidade:* {role_cfg['description']}",
-                    color=discord.Color.from_rgb(0, 229, 255)
+                    description=f"{role_cfg['emoji']} Você agora possui **@{target_role.name}**!\n\n> *Benefício:* {role_cfg['description']}",
+                    color=discord.Color.from_rgb(46, 204, 113)
                 )
                 await interaction.followup.send(embed=embed, ephemeral=True)
             except Exception as e:
                 await interaction.followup.send(f"Erro ao adicionar cargo: `{e}`", ephemeral=True)
 
-class StudioRolesView(discord.ui.View):
+class PlayerRolesView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
-        self.add_item(StudioRoleSelect())
+        self.add_item(PlayerRoleSelect())
 
 def create_panel_embed():
     embed = discord.Embed(
-        title="🛠️ CRITTO STUDIOS // SELEÇÃO DE FUNÇÃO & CARGOS",
+        title="🧪 FÁBRICA DE CRIATURAS // NOTIFICAÇÕES & PREFERÊNCIAS",
         description=(
-            "Bem-vindo à equipe de desenvolvimento!\n"
-            "Escolha no menu abaixo a sua especialidade de atuação no projeto.\n\n"
-            "💡 *Dica: Se você já tiver o cargo e selecioná-lo novamente, ele será removido (toggle).*"
+            "Personalize seus alertas e preferências para o grande lançamento!\n"
+            "Selecione as opções desejadas no menu suspenso abaixo.\n\n"
+            "💡 *Dica: Se já tiver o cargo e selecioná-lo novamente, ele será removido (toggle).* "
         ),
-        color=discord.Color.from_rgb(0, 229, 255)
+        color=discord.Color.from_rgb(46, 204, 113)
     )
 
     for cfg in ROLES_CONFIG:
@@ -245,10 +208,9 @@ def create_panel_embed():
             inline=False
         )
 
-    embed.set_footer(text="Critto Studios • Sistema Autônomo de Cargos • Discloud Free")
+    embed.set_footer(text="Fábrica de Criaturas • Roblox Experience • Sistema de Notificações")
     return embed
 
-# Intents necessários para atribuição de roles e evento on_member_join
 intents = discord.Intents.default()
 intents.members = True
 
@@ -257,7 +219,7 @@ bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 @bot.event
 async def on_ready():
     logger.info(f"Bot conectado como {bot.user} (ID: {bot.user.id})")
-    bot.add_view(StudioRolesView())
+    bot.add_view(PlayerRolesView())
     try:
         synced = await bot.tree.sync()
         logger.info(f"Comandos Slash sincronizados: {len(synced)}")
@@ -266,54 +228,68 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member: discord.Member):
-    """Atribui automaticamente o cargo Guest a qualquer novo membro que entrar no servidor."""
+    """Atribui automaticamente o cargo Pioneiro e envia saudação."""
     guild = member.guild
     bot_member = guild.me
     if not bot_member.guild_permissions.manage_roles:
-        logger.warning(f"Sem permissão de gerenciar cargos para dar Guest em {guild.name}.")
+        logger.warning(f"Sem permissão de gerenciar cargos para dar Pioneiro em {guild.name}.")
         return
 
-    guest_role = find_guild_role(guild, GUEST_ROLE_CFG)
-    if not guest_role:
+    pioneiro_role = find_guild_role(guild, GUEST_ROLE_CFG)
+    if not pioneiro_role:
         try:
-            guest_role = await guild.create_role(
+            pioneiro_role = await guild.create_role(
                 name=GUEST_ROLE_CFG["name"],
                 color=GUEST_ROLE_CFG["color"],
-                reason="Criação automática do cargo de entrada Guest"
+                reason="Criação automática do cargo Pioneiro"
             )
             logger.info(f"Cargo '{GUEST_ROLE_CFG['name']}' criado automaticamente em {guild.name}.")
         except Exception as e:
-            logger.error(f"Erro ao criar cargo Guest: {e}")
+            logger.error(f"Erro ao criar cargo Pioneiro: {e}")
             return
 
-    if guest_role >= bot_member.top_role:
-        logger.warning(f"Cargo Guest (@{guest_role.name}) está acima do bot em {guild.name}.")
-        return
+    if pioneiro_role < bot_member.top_role:
+        try:
+            await member.add_roles(pioneiro_role, reason="Auto-cargo de boas-vindas (Pioneiro)")
+            logger.info(f"Cargo Pioneiro atribuído com sucesso para {member} em {guild.name}.")
+        except Exception as e:
+            logger.error(f"Erro ao atribuir cargo Pioneiro para {member}: {e}")
 
-    try:
-        await member.add_roles(guest_role, reason="Auto-cargo de boas-vindas (Guest)")
-        logger.info(f"Cargo Guest atribuído com sucesso para {member} no servidor {guild.name}.")
-    except Exception as e:
-        logger.error(f"Erro ao atribuir cargo Guest para {member}: {e}")
+    # Enviar mensagem pública de boas-vindas se o canal existir
+    welcome_ch = guild.get_channel(WELCOME_CHANNEL_ID)
+    if not welcome_ch:
+        welcome_ch = discord.utils.get(guild.text_channels, name="👋・boas-vindas") or discord.utils.get(guild.text_channels, name="boas-vindas")
+    
+    if welcome_ch and welcome_ch.permissions_for(bot_member).send_messages:
+        welcome_embed = discord.Embed(
+            title="👋 Um novo Pioneiro entrou na Fábrica!",
+            description=f"Seja muito bem-vindo(a), {member.mention}! Você recebeu a tag exclusiva **@{pioneiro_role.name}**.\n\nFique atento aos anúncios e pegue suas notificações!",
+            color=discord.Color.from_rgb(241, 196, 15)
+        )
+        welcome_embed.set_thumbnail(url=member.display_avatar.url)
+        try:
+            await welcome_ch.send(embed=welcome_embed)
+        except Exception as e:
+            logger.error(f"Erro ao enviar boas-vindas no canal: {e}")
 
-@bot.command(name="cargos", aliases=["painel", "roles"])
+@bot.command(name="cargos", aliases=["painel", "roles", "notificacoes"])
 @commands.has_permissions(manage_roles=True)
 async def send_roles_panel(ctx: commands.Context):
     """Envia o painel de seleção de cargos no canal atual."""
     embed = create_panel_embed()
-    view = StudioRolesView()
+    view = PlayerRolesView()
     await ctx.send(embed=embed, view=view)
     try:
         await ctx.message.delete()
     except Exception:
         pass
 
-@bot.tree.command(name="cargos", description="Envia o painel interativo de seleção de cargos do estúdio.")
+@bot.tree.command(name="cargos", description="Envia o painel interativo de notificações e preferências da Fábrica.")
 @discord.app_commands.default_permissions(manage_roles=True)
 async def slash_send_roles_panel(interaction: discord.Interaction):
     """Envia o painel interativo de cargos via Slash Command."""
     embed = create_panel_embed()
-    view = StudioRolesView()
+    view = PlayerRolesView()
     await interaction.response.send_message(embed=embed, view=view)
 
 @send_roles_panel.error
@@ -324,15 +300,4 @@ async def on_command_error(ctx: commands.Context, error):
         logger.error(f"Erro no comando: {error}")
 
 if __name__ == "__main__":
-    try:
-        bot.run(TOKEN)
-    except discord.errors.PrivilegedIntentsRequired:
-        print("\n" + "="*70)
-        print("⚠️ [ATENÇÃO] PRIVILEGED INTENTS REQUIRED!")
-        print("Para o cargo automático de Guest funcionar ao entrar:")
-        print("1. Acesse: https://discord.com/developers/applications")
-        print("2. Selecione seu Bot -> Aba 'Bot'")
-        print("3. Em 'Privileged Gateway Intents', marque: 'SERVER MEMBERS INTENT'")
-        print("4. Clique em 'Save Changes' e inicie o bot!")
-        print("="*70 + "\n")
-        sys.exit(1)
+    bot.run(TOKEN)
