@@ -223,65 +223,28 @@ def create_panel_embed():
     return embed
 
 def create_welcome_embed(member: discord.Member, member_count: int, guild_icon_url: str | None = None) -> discord.Embed:
-    """Gera o embed estilizado de boas-vindas com múltiplos fields e design moderno."""
+    """Gera o embed minimalista, moderno e limpo de boas-vindas."""
     embed = discord.Embed(
-        title="🎉 Seja bem-vindo(a) à Fábrica de Criaturas!",
+        title="Seja bem-vindo(a) à ilha! 👋",
         description=(
-            f"Olá {member.mention}, prepare-se para explorar biomas insulares, colher elementos puros e chocar criaturas lendárias no Roblox!\n\n"
-            f"Você recebeu automaticamente o cargo **`👤・Membro`**."
+            f"Olá {member.mention}, explore biomas, colha elementos e crie criaturas lendárias no Roblox!\n\n"
+            f"**Acesso Rápido:**\n"
+            f"> 📜・Diretrizes: <#{CHANNELS['rules']}>\n"
+            f"> 🔔・Alertas de Lançamento: <#{CHANNELS['notifications']}>\n"
+            f"> 💬・Bate-papo Geral: <#{CHANNELS['chat']}>\n\n"
+            f"`🏝️ Membro #{member_count}` • *Aproveite a estadia!*"
         ),
-        color=discord.Color.from_rgb(46, 204, 113),
-        timestamp=datetime.datetime.now(datetime.timezone.utc)
+        color=discord.Color.from_rgb(16, 185, 129)
     )
 
-    embed.set_author(
-        name=f"{member.display_name} entrou na ilha!",
-        icon_url=member.display_avatar.url
-    )
-    embed.set_thumbnail(url=member.display_avatar.url)
-
-    embed.add_field(
-        name="🧭 Primeiros Passos",
-        value=(
-            f"> • Fique por dentro em <#{CHANNELS['announcements']}>\n"
-            f"> • Leia as diretrizes em <#{CHANNELS['rules']}>\n"
-            f"> • Tire suas dúvidas em <#{CHANNELS['faq']}>"
-        ),
-        inline=False
-    )
-
-    embed.add_field(
-        name="🔥 Pré-Lançamento",
-        value=(
-            f"> • Veja novidades em <#{CHANNELS['spoilers']}>\n"
-            f"> • Escolha seus alertas em <#{CHANNELS['notifications']}>\n"
-            f"> • Envie sugestões em <#{CHANNELS['suggestions']}>"
-        ),
-        inline=True
-    )
-
-    embed.add_field(
-        name="💬 Comunidade",
-        value=(
-            f"> • Converse em <#{CHANNELS['chat']}>\n"
-            f"> • Mande prints e memes em <#{CHANNELS['media']}>\n"
-            f"> • Entre em call na categoria de voz!"
-        ),
-        inline=True
-    )
-
-    embed.add_field(
-        name="👥 Membro Oficial",
-        value=f"Você é o treinador **#{member_count}** a desembarcar na ilha!",
-        inline=False
-    )
-
-    footer_text = "Fábrica de Criaturas • Experiência Roblox Oficial"
-    if guild_icon_url:
-        embed.set_footer(text=footer_text, icon_url=guild_icon_url)
+    icon = guild_icon_url or (member.guild.icon.url if member.guild.icon else None)
+    if icon:
+        embed.set_author(name="Fábrica de Criaturas", icon_url=icon)
     else:
-        embed.set_footer(text=footer_text)
+        embed.set_author(name="Fábrica de Criaturas")
 
+    embed.set_thumbnail(url=member.display_avatar.url)
+    embed.set_footer(text="Fábrica de Criaturas • Roblox Experience")
     return embed
 
 intents = discord.Intents.default()
